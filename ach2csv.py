@@ -1,10 +1,26 @@
 import re
 
 def extract_element(s, l=-1):
+	"""
+	Takes a substring of length n, or until multiple whitespace characters
+	are found, from the beginning of the string s.
+	
+	Parameters
+	----------
+	s : str
+		the string to extract from
+	l : int
+		the length to extract (-1 if until multiple whitespace)
+	
+	Returns
+	-------
+	tuple of length 2
+	The first element is s without the extracted string, and the
+	second is the extracted string.
+	"""
 	if l == -1:
-		# extract until multiple whitespace chars found
 		s = s.strip()
-		p = re.compile('\s\s')
+		p = re.compile('\s\s+')
 		res = p.split(s)
 		return (s[len(res[0]):], res[0])
 	else:
@@ -64,6 +80,7 @@ class ACHData:
 		print("Company name: " + self.company_name)
 		print("Reference Code: " + self.reference_code)
 
+# Testing stuff
 ach_file = ACHData()
 ach_file.parse_line('101 12400297111234567892106222214A094101WELLS FARGO BANK NA    LendPro                 000000000')
 ach_file.print_data()
