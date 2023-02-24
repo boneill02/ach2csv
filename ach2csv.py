@@ -1,3 +1,16 @@
+import re
+
+def extract_element(s, l=-1):
+	if l == -1:
+		# extract until multiple whitespace chars found
+		s = s.strip()
+		p = re.compile('\s\s')
+		res = p.split(s)
+		return (s[len(res[0]):], res[0])
+	else:
+		# extract string of length l
+		return (s[l:], s[:l + 1])
+
 class ACHData:
 	def __init__(self):
 		self.priority_code = None
@@ -9,25 +22,48 @@ class ACHData:
 		self.company_id = None
 		self.company_name = None
 		self.date = None
-		self.timestamp = None
+		self.time = None
 		self.file_data = None
 		self.reference_code = None
 		self.batch_number = None
 	def parse_line(self, s):
-		if s[0] == '1':
+		f = s[0]
+		s = s[1:]
+		if f == '1':
 			# first line of header
-			self.priority_code = int(s[1:2])
-			s = s[3:]
-			self.routing_snumber = int(s[:9])
-		elif s[0] == '5':
+			s, self.priority_code = extract_element(s, 2)
+			s, self.routing_snumber = extract_element(s, 9)
+			s, self.company_id = extract_element(s, 10)
+			s, self.date = extract_element(s, 6)
+			s, self.time = extract_element(s, 4)
+			s, self.file_data = extract_element(s, 7)
+			s, self.bank_name = extract_element(s)
+			s, self.company_name = extract_element(s)
+			s, self.reference_code = extract_element(s)
+		elif f == '5':
 			# second line of header
 			pass
-		elif s[0] == '6':
+		elif f == '6':
 			# transaction
 			pass
-		elif s[0] == '8':
+		elif f == '8':
 			# first line of footer
 			pass
-		elif s[0] == '9':
+		elif f == '9':
 			# second line of footer
 			pass
+
+	def print_data(self):
+		print("Priority Code: " + self.priority_code)
+		print("Recipient Routing Number: " + self.routing_snumber)
+		print("Company ID: " + self.company_id)
+		print("Date: " + self.date)
+		print("Time: " + self.time)
+		print("File Data Information: " + self.file_data)
+		print("Bank name: " + self.bank_name)
+		print("Company name: " + self.company_name)
+		print("Reference Code: " + self.reference_code)
+
+ach_file = ACHData()
+ach_file.parse_line('101 12400297111234567892106222214A094101WELLS FARGO BANK NA    LendPro                 000000000')
+ach_file.print_data()
