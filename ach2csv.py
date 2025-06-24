@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+"""
+
+Convert ACH transaction data to CSV
+
+"""
+
 import argparse
 import re
 
