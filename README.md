@@ -9,4 +9,13 @@ into a spreadsheet for research and bookkeeping.
 
 ## Further Reading
 
-https://help.loanpro.io/article/opq9bhnwen-how-nacha-files-work
+* [How NACHA Files Work](https://help.loanpro.io/article/opq9bhnwen-how-nacha-files-work)
+
+## Bugs
+
+Submit an issue. Email me a patch or submit a PR if you've fixed it.
+
+## License
+
+Copyright (C) 2023-2025 Ben O'Neill <ben@oneill.sh>. License: MIT.
+See [LICENSE](LICENSE) for more details.
