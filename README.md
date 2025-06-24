@@ -7,6 +7,12 @@ network.
 Converting ACH files to CSV allows for transaction data to be imported
 into a spreadsheet for research and bookkeeping.
 
+## Usage
+
+```
+ach2csv.py achfile
+```
+
 ## Further Reading
 
 * [How NACHA Files Work](https://help.loanpro.io/article/opq9bhnwen-how-nacha-files-work)
