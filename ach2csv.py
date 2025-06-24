@@ -1,3 +1,4 @@
+import argparse
 import re
 
 def extract_element(s, l=-1):
@@ -20,7 +21,7 @@ def extract_element(s, l=-1):
 	"""
 	if l == -1:
 		s = s.strip()
-		p = re.compile('\s\s+')
+		p = re.compile(r'\s\s+')
 		res = p.split(s)
 		return (s[len(res[0]):], res[0])
 	else:
@@ -28,20 +29,9 @@ def extract_element(s, l=-1):
 		return (s[l:], s[:l + 1])
 
 class ACHData:
-	def __init__(self):
-		self.priority_code = None
-		self.service_class_code = None
-		self.entry_class = None
-		self.entry_desc = None
-		self.routing_snumber = None
-		self.bank_name = None
-		self.company_id = None
-		self.company_name = None
-		self.date = None
-		self.time = None
-		self.file_data = None
-		self.reference_code = None
-		self.batch_number = None
+	def __init__(self, s):
+		self.parse_line(s)
+
 	def parse_line(self, s):
 		f = s[0]
 		s = s[1:]
@@ -69,18 +59,33 @@ class ACHData:
 			# second line of footer
 			pass
 
-	def print_data(self):
-		print("Priority Code: " + self.priority_code)
-		print("Recipient Routing Number: " + self.routing_snumber)
-		print("Company ID: " + self.company_id)
-		print("Date: " + self.date)
-		print("Time: " + self.time)
-		print("File Data Information: " + self.file_data)
-		print("Bank name: " + self.bank_name)
-		print("Company name: " + self.company_name)
-		print("Reference Code: " + self.reference_code)
+class ACHFile:
+	def __init__(self, lines):
+		self.lines = lines
+		self.data = []
+		self.parse()
 
-# Testing stuff
-ach_file = ACHData()
-ach_file.parse_line('101 12400297111234567892106222214A094101WELLS FARGO BANK NA    LendPro                 000000000')
-ach_file.print_data()
+	def parse(self):
+		for l in self.lines:
+			self.data.append(ACHData(l))
+
+	def print_data(self, idx):
+		print('Priority Code: ' + self.data[idx].priority_code)
+		print('Recipient Routing Number: ' + self.data[idx].routing_snumber)
+		print('Company ID: ' + self.data[idx].company_id)
+		print('Date: ' + self.data[idx].date)
+		print('Time: ' + self.data[idx].time)
+		print('File Data Information: ' + self.data[idx].file_data)
+		print('Bank name: ' + self.data[idx].bank_name)
+		print('Company name: ' + self.data[idx].company_name)
+		print('Reference Code: ' + self.data[idx].reference_code)
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(prog='ach2csv',
+                                     description='Convert ACH files to CSV')
+	parser.add_argument('filename')
+	args = parser.parse_args()
+
+	with open(args.filename) as f:
+		ach_file = ACHFile(f.readlines())
+		ach_file.print_data(0)
